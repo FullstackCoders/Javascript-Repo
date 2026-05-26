@@ -1,0 +1,28 @@
+//Old Replace Of this we use debouncing
+    window.addEventListener('resize', () => {
+        //console.log('Resized Old!');
+        console.log("Old way " +window.innerHeight + "x" + window.innerWidth)
+    });
+
+    //immediate → run instantly or not
+    function debounce(func, wait, immediate = false) {
+        let timeoutId;
+
+        return function (...args) { //Debounce returns another function.Because window.addEventListener('resize', handleResize); needs a callable function.
+            const context = this; //Stores current object context. Needed because inside setTimeout, this may change.
+            const callNow = immediate && !timeoutId;  //if immediate is true and no timer exists function runs immediately
+            clearTimeout(timeoutId);
+
+            timeoutId = setTimeout(() => {
+                timeoutId = null;
+                if (!immediate) func.apply(context, args); // it become function like our function here is-> console.log('Using debounce ' +window.innerHeight + "x" + window.innerWidth)
+            }, wait);
+
+            if (callNow) func.apply(context, args);
+        };
+    }
+
+    // Usage Example (e.g., window resizing)
+    //const handleResize = debounce(() => console.log('Resized!'), 300); //Now it runs only after user stops resizing for 300ms
+    const handleResize = debounce(() => console.log('Using debounce ' +window.innerHeight + "x" + window.innerWidth), 300); //Now it runs only after user stops resizing for 300ms
+    window.addEventListener('resize', handleResize);
