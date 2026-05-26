@@ -1,3 +1,5 @@
+//1. Custom Debounce Function(With Immediate Execution Option)The Logic: Debouncing ensures a function wins a race against time.If a new event fires before the wait time expires, 
+the previous timer resets.Senior interviews require handling the this context, arguments, and an optional immediate flag.
 //Old Replace Of this we use debouncing
     window.addEventListener('resize', () => {
         //console.log('Resized Old!');
@@ -26,3 +28,34 @@
     //const handleResize = debounce(() => console.log('Resized!'), 300); //Now it runs only after user stops resizing for 300ms
     const handleResize = debounce(() => console.log('Using debounce ' +window.innerHeight + "x" + window.innerWidth), 300); //Now it runs only after user stops resizing for 300ms
     window.addEventListener('resize', handleResize);
+//END
+
+ //Start : Throttle limits how often a function can run.
+    //It allows execution: at most once every fixed time interval
+    function onScroll() {
+        console.log("Scrolling...");
+    }
+
+    function throttle(func, limit) {
+        let lastCall = 0; 
+        return function (...args) {
+            const now = Date.now();
+
+            if (now - lastCall >= limit) {
+                lastCall = now;
+                func.apply(this, args);
+            }
+        };
+    }
+    const throttledScroll = throttle(onScroll, 1000);
+    window.addEventListener("scroll", throttledScroll);
+
+
+
+
+//    Difference Between Debounce and Throttle
+//    Debounce	-- Throttle
+//    Waits until user stops --	Runs at intervals
+//    Executes once after delay --	Executes repeatedly
+//    Best for search input --	Best for scroll / resize
+//    Reduces many calls to one --	Limits frequency
