@@ -1,0 +1,66 @@
+//Shallow Copy
+//Suppose we have user object
+const user = {
+        name: "Wiki",
+        age: 25,
+        skills: ["JavaScript", "Node.js"],
+        address: {
+            city: "Haldwani"
+        },
+        createdAt: new Date(),
+        pattern: /hello/gi
+    };
+
+//Shallow Copy : A shallow copy creates a new object that copies the top-level properties of the original object. 
+//However, for nested objects or arrays, it copies only references to the original nested structures, not the actual nested data.
+//Example 
+const clonedUser1 = { ...user };  //Copies only first level. Nested objects are STILL shared.
+
+// LEVEL 1 modifications (safe - won't affect original)
+clonedUser1.name = "Rajesh"; 
+
+//LEVEL 2 modifications (unsafe - affects original!)
+clonedUser1.skills.push("JS"); //It changed or add value in Orginal Object also because it olny colpy first level like 
+clonedUser1.address.city = "Doon";
+
+//So we use Deep Clone Prevents the Nested Reference Problem
+//Deep cloning creates a completely independent copy where ALL levels (nested objects, arrays, dates, regexps, etc.) are new copies,
+//not references to the original.
+//structuredClone() is a predefined, native method in JavaScript for creating deep copies of objects 
+
+const deepCopy = structuredClone(user); 
+deepCopy.skills.push("React");
+console.log(original.skills); // ["JavaScript"] - unchanged! ✅
+
+//or we create our own deepclone function
+
+ function deepClone(obj, hash = new WeakMap()) { 
+        // Handle primitives and null/undefined
+        if (Object(obj) !== obj) return obj;
+
+        // Handle cyclic references
+        if (hash.has(obj)) return hash.get(obj);
+
+        // Handle Date and RegExp objects
+        if (obj instanceof Date) return new Date(obj);
+        if (obj instanceof RegExp) return new RegExp(obj.source, obj.flags);
+
+        // Create new object/array preserving prototype
+        const clone = Array.isArray(obj) ? [] : Object.create(Object.getPrototypeOf(obj));
+
+        hash.set(obj, clone);
+
+        // Copy all properties (including Symbols)
+        Reflect.ownKeys(obj).forEach(key => {
+            clone[key] = deepClone(obj[key], hash);
+        });
+
+        return clone;
+    }
+
+  const clonedUser = deepClone(user);
+  // Modify cloned object
+  clonedUser.name = "Rahul";
+  clonedUser.skills.push("React");
+  clonedUser.address.city = "Delhi";
+  console.log(clonedUser);
