@@ -1,0 +1,20 @@
+3. Flatten a Nested Array (Iterative Strategy for Scale)The Logic: While recursion is intuitive, it can cause a stack overflow (Maximum call stack size exceeded) on deeply nested data. An iterative solution using a stack structure handles infinite depth safely.javascriptfunction flattenArray(arr) {
+  const stack = [...arr];
+  const result = [];
+  
+  while (stack.length) {
+    const next = stack.pop();
+    if (Array.isArray(next)) {
+      // Push back elements to maintain correct ordering
+      stack.push(...next);
+    } else {
+      result.push(next);
+    }
+  }
+  
+  return result.reverse();
+}
+
+// Usage
+console.log(flattenArray([1, [2, [3, [4]], 5]])); // [1, 2, 3, 4, 5]
+Use code with caution.Scale Optimization: Eliminates call-stack overhead, converting a potential \(O(N)\) memory stack failure into a manageable heap allocation.
